@@ -12,12 +12,13 @@ def print_htable(h):
     return
 
 
-def find(x, parent_dictionary):
+def find(a, parent_dictionary):
+    # we need to input the parent dictionary as well so that it can be updated
 
-    if x!= parent_dictionary[x]:
-        parent_dictionary[x] = find(parent_dictionary[x])
+    if a != parent_dictionary[a]:
+        parent_dictionary[a], parent_dictionary = find(parent_dictionary[a], parent_dictionary)
 
-    return parent_dictionary[x]
+    return parent_dictionary[a], parent_dictionary
 
 if __name__ == '__main__':
     edge_priority_q = PriorityQueue()
@@ -27,27 +28,38 @@ if __name__ == '__main__':
     edge_priority_q.put((2, 'BC'))
     edge_priority_q.put((10, 'BD'))
     edge_priority_q.put((2, 'CD'))
+    edge_priority_q.put((13, 'AJ'))
 
-    num_edges = 5
+    num_edges = 6
 
     # need to figure out how to get this from the input file
     # vertex and its parent
-    global vertex # this needs to be global so that the find function can update and compress all of the parents
-    vertex = {'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D'}
+    # vertex # this needs to be global so that the find function can update and compress all of the parents
+    vertex = {'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D', 'J': 'J'}
 
-    print_htable(vertex)
+    # list of the edges were gonna add to the path
+    x = []
 
     for i in range(num_edges):
         edge = edge_priority_q.get()
 
-        print("Parent 0", vertex[edge[1][0]], 'Parent 1', vertex[edge[1][1]])
+        print('Vertex 0:', edge[1][0], 'Vertex 1:', edge[1][1], 'size:', edge[0])
+        print("Parent 0:", vertex[edge[1][0]], 'Parent 1:', vertex[edge[1][1]])
+        print("")
 
-        if vertex[edge[1][0]] != vertex[edge[1][1]]:
-            print("True")
-            # change the parent of the second element of the name to the first element
-            #TODO This should be find
+        # get the parent of the first vertex and update the vertex dictionary
+        parent0, vertex = find(edge[1][0], vertex)
+        # do the same for the second
+        parent1, vertex = find(edge[1][1], vertex)
+
+        # if they are in different sets, combine the sets and add this edge to X
+        if parent0 != parent1:
+            x.append(edge)
+
+            # make the parent of edge[1][1], edge[1][0]
             vertex[edge[1][1]] = edge[1][0]
 
-        #if vertex[edge[1][0]] != vertex[edge[1][0]]:
+    for i in x:
+        print(i)
 
-    print_htable(vertex)
+
