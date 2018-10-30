@@ -4,17 +4,15 @@
 from queue import PriorityQueue
 
 
-def print_htable(h):
-
-    for key, value in h.items():
-        print('%s: %s' % (key, value))
-
-    return
-
-
 def find(a, parent_dictionary):
-    # we need to input the parent dictionary as well so that it can be updated
-
+    """
+    This method finds the parent of a node while simultaneously compressing the tree so that all leafs of a tree point 
+    to the root of the tree
+    
+    :param a: the vertex that you want to find the parent of
+    :param parent_dictionary: the dictionary of nodes and their parents
+    :return: the parent of a, the same parent dictionary but compressed to that all leafs of a tree point to the parent
+    """
     if a != parent_dictionary[a]:
         parent_dictionary[a], parent_dictionary = find(parent_dictionary[a], parent_dictionary)
 
@@ -23,29 +21,35 @@ def find(a, parent_dictionary):
 if __name__ == '__main__':
     edge_priority_q = PriorityQueue()
 
-    edge_priority_q.put((2, 'AB'))
-    edge_priority_q.put((12, 'AC'))
-    edge_priority_q.put((2, 'BC'))
-    edge_priority_q.put((10, 'BD'))
-    edge_priority_q.put((2, 'CD'))
-    edge_priority_q.put((13, 'AJ'))
+    # read in the file and store the input into a variable names lines
+    # change the name of the text file here to read in a different graph
+    f = open('input1.txt')
+    lines = f.readlines()
+    f.close()
 
-    num_edges = 6
+    vertex = {}  # this dictionary will contain every node as the key and it's parent as the value
+    num_edges = 0  # this is the number of usable edges in the graph (does not include loops)
 
-    # need to figure out how to get this from the input file
-    # vertex and its parent
-    # vertex # this needs to be global so that the find function can update and compress all of the parents
-    vertex = {'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D', 'J': 'J'}
+    for ln in lines:
+        split_ln = ln.split(',')
+        num = int(split_ln[0])
+        verts = str(split_ln[1])
+        verts.strip()  # remove preceding and trailing whitespace
+        verts = verts[0] + verts[1]  # make sure to only grab letters and not new lines
+
+        # this handles the case for loops because if an edge loops back to the same node, the vertices will be the same
+        if verts[0] != verts[1]:
+            edge_priority_q.put((num, verts))
+            vertex[verts[0]] = verts[0]
+            vertex[verts[1]] = verts[1]
+            num_edges += 1
 
     # list of the edges were gonna add to the path
     x = []
 
+    # iterates over each of the edges
     for i in range(num_edges):
         edge = edge_priority_q.get()
-
-        print('Vertex 0:', edge[1][0], 'Vertex 1:', edge[1][1], 'size:', edge[0])
-        print("Parent 0:", vertex[edge[1][0]], 'Parent 1:', vertex[edge[1][1]])
-        print("")
 
         # get the parent of the first vertex and update the vertex dictionary
         parent0, vertex = find(edge[1][0], vertex)
@@ -56,17 +60,19 @@ if __name__ == '__main__':
         if parent0 != parent1:
             x.append(edge)
 
+            # this is the equivalent of the Union method from the text book
+            # I do not have to worry about rank because I my find method compresses the tree
             # make the parent of edge[1][1], edge[1][0]
             vertex[edge[1][1]] = edge[1][0]
 
     # length of the final path
     path = 0
-
-    print("Edges in final path:")
+    print("\nEdges in final path:")
     for i in x:
         print(i[1])
         path += i[0]
 
-    print('Final path length:', path)
+    print('\nFinal path length:', path)
+
 
 
