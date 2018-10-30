@@ -59,7 +59,14 @@ if __name__ == '__main__':
             # make the parent of edge[1][1], edge[1][0]
             vertex[edge[1][1]] = edge[1][0]
 
+    # length of the final path
+    path = 0
+
+    print("Edges in final path:")
     for i in x:
-        print(i)
+        print(i[1])
+        path += i[0]
+
+    print('Final path length:', path)
 
 
