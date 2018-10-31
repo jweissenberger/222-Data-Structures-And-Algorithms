@@ -1,0 +1,15 @@
+2,AB
+9,BD
+2,BC
+15,GA
+24,FF
+7,GH
+2,CD
+8,CA
+2,DE
+2,EF
+6,HG
+2,FG
+9,AB
+2,GH
+5,CA

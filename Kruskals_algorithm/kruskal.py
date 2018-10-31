@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     # read in the file and store the input into a variable names lines
     # change the name of the text file here to read in a different graph
-    f = open('input1.txt')
+    f = open('input3.txt')
     lines = f.readlines()
     f.close()
 
@@ -39,8 +39,8 @@ if __name__ == '__main__':
 
         # this handles the case for loops because if an edge loops back to the same node, the vertices will be the same
         if verts[0] != verts[1]:
-            edge_priority_q.put((num, verts))
-            vertex[verts[0]] = verts[0]
+            edge_priority_q.put((num, verts))  # put the tuple of the number and edge into the priority q
+            vertex[verts[0]] = verts[0]  # fill the dictionary with each of the vertices and have the parent be itself
             vertex[verts[1]] = verts[1]
             num_edges += 1
 
@@ -65,8 +65,7 @@ if __name__ == '__main__':
             # make the parent of edge[1][1], edge[1][0]
             vertex[edge[1][1]] = edge[1][0]
 
-    # length of the final path
-    path = 0
+    path = 0  # length of the final path
     print("\nEdges in final path:")
     for i in x:
         print(i[1])
